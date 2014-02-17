@@ -12,10 +12,10 @@ BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
 
 # taken from the requirements.txt
-Requires: python-flask = 0.10.1
+Requires: python-flask = 1:0.10.1
 Requires: python-flask-wtf = 0.8.4
-Requires: python-jinja2-27-2.7
-Requires: python-markupSafe = 0.18
+Requires: python-jinja2-27 = 2.7
+Requires: python-markupsafe = 0.18
 Requires: python-wtforms = 1.0.4
 Requires: python-werkzeug = 0.9.3
 Requires: python-itsdangerous = 0.22

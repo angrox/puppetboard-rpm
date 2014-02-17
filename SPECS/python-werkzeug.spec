@@ -4,7 +4,7 @@
 
 Name:           python-werkzeug
 Version:        0.9.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Swiss Army knife of Python web development 
 
 Group:          Development/Libraries
@@ -16,7 +16,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools-devel
-BuildRequires:  python-sphinx
+BuildRequires:  python-sphinx10
 BuildRequires:  python-jinja2-27
 
 %description
@@ -50,7 +50,7 @@ Documentation and examples for %{name}.
 %setup -q -n %{srcname}-%{version}
 %{__sed} -i 's/\r//' LICENSE
 %{__sed} -i '1d' werkzeug/testsuite/multipart/collect.py
-%{__sed} -i "2i __requires__ = ['Jinja2>=2.4']" setup.py
+%{__sed} -i "2i __requires__ = ['Jinja2>=2.7']" setup.py
 
 
 %build
