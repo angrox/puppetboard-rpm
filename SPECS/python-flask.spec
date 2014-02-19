@@ -23,11 +23,11 @@ BuildRequires:  python2-devel python-setuptools python-werkzeug
 Requires:       python-werkzeug
 
 %if 0%{?rhel}
-BuildRequires:  python-jinja2-27
+BuildRequires:  python-jinja2 = 2.7
 BuildRequires:  python-itsdangerous
 BuildRequires:  python-sphinx10
 %define sphinxbuild SPHINXBUILD=sphinx-1.0-build
-Requires:       python-jinja2-27
+Requires:       python-jinja2 = 2.7
 Requires:       python-itsdangerous
 %else
 BuildRequires:  python-jinja2

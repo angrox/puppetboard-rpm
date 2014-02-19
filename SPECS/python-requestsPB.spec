@@ -6,7 +6,7 @@
 
 Name:           python-requests
 Version:        1.2.3
-Release:        4%{?dist}
+Release:        PB.0%{?dist}
 Summary:        HTTP library, written in Python, for human beings
 
 License:        ASL 2.0
@@ -25,17 +25,17 @@ Patch2:         python-requests-system-urllib3.patch
 BuildArch:      noarch
 
 BuildRequires:  python2-devel
-BuildRequires:  python-chardet
-BuildRequires:  python-urllib3
+#BuildRequires:  python-chardet
+#BuildRequires:  python-urllib3
 
-Requires:       ca-certificates
-Requires:       python-chardet
-Requires:       python-urllib3
+#Requires:       ca-certificates
+#Requires:       python-chardet
+#Requires:       python-urllib3
 
-%if 0%{?rhel} && 0%{?rhel} <= 6
-BuildRequires:  python-ordereddict
-Requires:       python-ordereddict
-%endif
+#%if 0%{?rhel} && 0%{?rhel} <= 6
+#BuildRequires:  python-ordereddict
+#Requires:       python-ordereddict
+#%endif
 
 %description
 Most existing Python modules for sending HTTP requests are extremely verbose and 
@@ -61,7 +61,7 @@ designed to make HTTP requests easy for developers.
 
 %prep
 %setup -q -n requests-%{version}
-# tested without the patches - but we keep them in the src-spec
+
 #%patch0 -p1
 #%patch1 -p1
 #%patch2 -p1
@@ -80,10 +80,10 @@ pushd %{py3dir}
 %{__python3} setup.py build
 
 # Unbundle chardet.  Patch1 switches usage to system chardet.
-rm -rf build/lib/requests/packages/charade
+#rm -rf build/lib/requests/packages/charade
 
 # Unbundle urllib3.  Patch1 switches usage to system urllib3.
-rm -rf build/lib/requests/packages
+#rm -rf build/lib/requests/packages
 
 popd
 %endif
@@ -91,10 +91,10 @@ popd
 %{__python} setup.py build
 
 # Unbundle chardet.  Patch1 switches usage to system chardet.
-rm -rf build/lib/requests/packages/charade
+#rm -rf build/lib/requests/packages/charade
 
 # Unbundle urllib3.  Patch1 switches usage to system urllib3.
-rm -rf build/lib/requests/packages
+#rm -rf build/lib/requests/packages
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -130,8 +130,8 @@ popd
 %endif
 
 %changelog
-* Tue Feb 11 2014 Johan De Wit <johan@open-future.be> - 1.2.3-1
-- Updated to version 1.2.3 - puppetboard
+* Wed Feb 14 2014 Johan De Wit <johan@open-future.be> - 1.2.3-0 
+- Bundled everything, puppetboard need the complete package
 
 * Tue Jun 11 2013 Ralph Bean <rbean@redhat.com> - 1.1.0-4
 - Correct a rhel conditional on python-ordereddict

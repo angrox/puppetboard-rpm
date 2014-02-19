@@ -1,10 +1,14 @@
+%if 0%{?fedora} > 12
+%global with_python3 1
+%else
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%endif
 
 # Enable building without docs to avoid a circular dependency between this
 # and python-sphinx:
-%global with_docs 1
+%global with_docs 0
 
-Name:		python-jinja2-27
+Name:		python-jinja2
 Version:	2.7
 Release:	1%{?dist}
 Summary:	General purpose template engine
@@ -12,8 +16,8 @@ Group:		Development/Languages
 License:	BSD
 URL:		http://jinja.pocoo.org/
 Source0:	http://pypi.python.org/packages/source/J/Jinja2/Jinja2-%{version}.tar.gz
-Source1:	README.Fedora
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# see https://github.com/mitsuhiko/jinja2/pull/259
+Patch0:		99d0f3165ace0befd9eafd661be6e0c23d5f9ba5.patch
 BuildArch:	noarch
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools
@@ -23,8 +27,14 @@ BuildRequires:	python-sphinx10
 %endif # with_docs
 Requires:	python-babel >= 0.8
 Requires:	python-markupsafe
-BuildRequires:	python-setuptools
-
+%if 0%{?with_python3}
+BuildRequires:	python3-devel
+BuildRequires:	python3-setuptools
+BuildRequires:	python3-markupsafe
+%endif # with_python3
+# from epel for RHEL
+Conflicts:      python-jinja2-26
+Conflicts:      python-jinja2-27
 
 %description
 Jinja2 is a template engine written in pure Python.  It provides a
@@ -38,9 +48,31 @@ principles and adding functionality useful for templating
 environments.
 
 
+%if 0%{?with_python3}
+%package -n python3-jinja2
+Summary:	General purpose template engine
+Group:		Development/Languages
+Requires:	python3-markupsafe
+# babel isn't py3k ready yet, and is only a weak dependency
+#Requires:	 python3-babel >= 0.8
+
+
+%description -n python3-jinja2
+Jinja2 is a template engine written in pure Python.  It provides a
+Django inspired non-XML syntax but supports inline expressions and an
+optional sandboxed environment.
+
+If you have any exposure to other text-based template languages, such
+as Smarty or Django, you should feel right at home with Jinja2. It's
+both designer and developer friendly by sticking to Python's
+principles and adding functionality useful for templating
+environments.
+%endif # with_python3
+
+
 %prep
 %setup -q -n Jinja2-%{version}
-cp -p %{SOURCE1} .
+#%patch0 -p1
 
 # cleanup
 find . -name '*.pyo' -o -name '*.pyc' -delete
@@ -48,56 +80,103 @@ find . -name '*.pyo' -o -name '*.pyc' -delete
 # fix EOL
 sed -i 's|\r$||g' LICENSE
 
+%if 0%{?with_python3}
+cp -a . %{py3dir}
+%endif # with_python3
+
 
 %build
-%{__python} setup.py bdist_egg
+%{__python} setup.py build
 
+# for now, we build docs using Python 2.x and use that for both
+# packages.
 %if 0%{?with_docs}
-make -C docs html SPHINXBUILD=sphinx-1.0-build
+make -C docs html PYTHONPATH=$(pwd) SPHINXBUILD=sphinx-1.0-build
 %endif # with_docs
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py build
+popd
+%endif # with_python3
 
 
 %install
-rm -rf %{buildroot}
-
-# older versions of easy_install can't recreate path
-mkdir -p %{buildroot}%{python_sitelib}
-
-easy_install -m -O1 --prefix %{buildroot}%{_usr} dist/*.egg
-
-# fix permissions
-find %{buildroot}%{python_sitelib}/Jinja2-%{version}-py*.egg -type f \
-     -exec chmod a-x {} \;
+%{__python} setup.py install -O1 --skip-build \
+	    --root %{buildroot}
 
 # remove hidden file
 rm -rf docs/_build/html/.buildinfo
 
-
-%clean
-rm -rf %{buildroot}
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install -O1 --skip-build \
+	    --root %{buildroot}
+popd
+%endif # with_python3
 
 
 %check
 make test
 
 
+%if 0%{?with_python3}
+pushd %{py3dir}
+make test
+popd
+%endif # with_python3
+
+
 %files
-%defattr(-,root,root,-)
-%doc AUTHORS CHANGES LICENSE README.Fedora
+%doc AUTHORS CHANGES LICENSE
 %if 0%{?with_docs}
 %doc docs/_build/html
 %endif # with_docs
 %doc ext
 %doc examples
 %{python_sitelib}/*
+#%exclude %{python_sitelib}/jinja2/_debugsupport.c
+
+
+%if 0%{?with_python3}
+%files -n python3-jinja2
+%doc AUTHORS CHANGES LICENSE
+%if 0%{?with_docs}
+%doc docs/_build/html
+%endif # with_docs
+%doc ext
+%doc examples
+%{python3_sitelib}/*
+#%exclude %{python3_sitelib}/jinja2/_debugsupport.c
+%endif # with_python3
 
 
 %changelog
-* Tue Feb 11 2014 Johan De Wit <johan@open-future.be> - 2.7-1
-- Update to 2.7 - for puppetboard requirements.
+* Wed Feb 19 2014 Johan De Wit <johan@open-future.be> - 2.7-1
+- Revert back to 2.7, for RHEL & puppetboard
+- Disabled docs, dependecy conflicts ...
 
-* Mon Nov 28 2011 Thomas Moschny <thomas.moschny@gmx.de> - 2.6-2
-- Adapt Fedora .spec file for EL6.
+* Fri Aug 16 2013 Thomas Moschny <thomas.moschny@gmx.de> - 2.7.1-1
+- Update to 2.7.1.
+
+* Thu Jul 25 2013 Orion Poplawski <orion@cora.nwra.com> - 2.7-1
+- Update to 2.7
+- spec cleanup
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 2.6-5
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 2.6-4
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Jul 25 2011 Thomas Moschny <thomas.moschny@gmx.de> - 2.6-1
 - Update to 2.6.

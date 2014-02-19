@@ -2,7 +2,7 @@
 
 Name:           python-%{upstream_name}
 Version:        0.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Puppetboard is a web interface to PuppetDB aiming to replace the reporting functionality of Puppet Dashboard. 
 License:        Apache v2.0 License
 URL:            https://github.com/nedap/puppetboard
@@ -14,13 +14,13 @@ BuildRequires:  python-setuptools
 # taken from the requirements.txt
 Requires: python-flask = 1:0.10.1
 Requires: python-flask-wtf = 0.8.4
-Requires: python-jinja2-27 = 2.7
+Requires: python-jinja2 = 2.7
 Requires: python-markupsafe = 0.18
 Requires: python-wtforms = 1.0.4
 Requires: python-werkzeug = 0.9.3
 Requires: python-itsdangerous = 0.22
 Requires: python-pypuppetdb = 0.1.0
-Requires: python-requests = 1.2.3
+Requires: python-requests >= 1.2.3-PB
 
 %description
 Puppetboard is a web interface to PuppetDB aiming to replace the reporting
@@ -45,5 +45,8 @@ rm -r *.egg-info
 %{python_sitelib}/%{upstream_name}*.egg-info
 
 %changelog
+* Tue Feb 19 2014 Johan De Wit <johan@open-future.be> - 0.0.4-2
+- Adjustment of the deplist.  Troubles with some python packages
+
 * Tue Feb 11 2014 Johan De Wit <johan@open-future.be> - 0.0.4-1
 - initial rpm package 0.0.4 
