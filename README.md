@@ -1,6 +1,8 @@
 puppetboard-rpm
 ===============
 
+Temporarly made the centosw/RH 6 rpms online at http://www.koewacht.net/repos/puppetboard/
+
 Spec files to build all required packages to install puppetboard from rpm.  This is only for the rhel/centos verion six.  puppetboard depends on python 2.x, ans I haven't tested it on the latest fedora.
 
 This is a first attemp to get all python-packages into an rpm.  Most specs are taken from the epel (6.5) or centos base (6.5) src.rpms, and updated to the 'requirements.txt' form the [puppetboard github page] (https://github.com/nedap/puppetboard).
