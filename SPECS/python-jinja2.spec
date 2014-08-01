@@ -17,7 +17,7 @@ License:	BSD
 URL:		http://jinja.pocoo.org/
 Source0:	http://pypi.python.org/packages/source/J/Jinja2/Jinja2-%{version}.tar.gz
 # see https://github.com/mitsuhiko/jinja2/pull/259
-Patch0:		99d0f3165ace0befd9eafd661be6e0c23d5f9ba5.patch
+#Patch0:		99d0f3165ace0befd9eafd661be6e0c23d5f9ba5.patch
 BuildArch:	noarch
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools
