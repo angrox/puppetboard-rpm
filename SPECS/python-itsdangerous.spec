@@ -7,7 +7,7 @@
 %endif
 
 Name:           python-%{upstream_name}
-Version:        0.22
+Version:        0.24
 Release:        1%{?dist}
 Summary:        Python library for passing trusted data to untrusted environments
 License:        BSD
@@ -15,9 +15,9 @@ URL:            http://pythonhosted.org/itsdangerous/
 Source0:        http://pypi.python.org/packages/source/i/%{upstream_name}/%{upstream_name}-%{version}.tar.gz
 # Tarballs on PyPi lack LICENSE, CHANGES, and tests.
 # https://github.com/mitsuhiko/itsdangerous/pull/22
-Source1:        LICENSE
-Source2:        CHANGES
-Source3:        tests.py
+#Source1:        LICENSE
+#Source2:        CHANGES
+#Source3:        tests.py
 BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
@@ -52,7 +52,6 @@ Signatures (JWS).
 %prep
 %setup -q -n %{upstream_name}-%{version}
 rm -r *.egg-info
-cp -p %{SOURCE1} %{SOURCE2} %{SOURCE3} .
 
 %if %{with python3}
 rm -rf %{py3dir}
