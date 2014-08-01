@@ -3,7 +3,7 @@
 %global srcname Werkzeug
 
 Name:           python-werkzeug
-Version:        0.9.3
+Version:        0.9.6
 Release:        2%{?dist}
 Summary:        The Swiss Army knife of Python web development 
 
@@ -16,8 +16,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools-devel
-BuildRequires:  python-sphinx10
-BuildRequires:  python-jinja2-27
+BuildRequires:  python-sphinx
+BuildRequires:  python-jinja2
 
 %description
 Werkzeug
