@@ -5,7 +5,7 @@
 %endif
 
 Name:           python-requests
-Version:        1.2.3
+Version:        2.3.0
 Release:        PB.0%{?dist}
 Summary:        HTTP library, written in Python, for human beings
 
@@ -14,13 +14,13 @@ URL:            http://pypi.python.org/pypi/requests
 Source0:        http://pypi.python.org/packages/source/r/requests/requests-%{version}.tar.gz
 # Explicitly use the system certificates in ca-certificates.
 # https://bugzilla.redhat.com/show_bug.cgi?id=904614
-Patch0:         python-requests-system-cert-bundle.patch
+#Patch0:         python-requests-system-cert-bundle.patch
 # Unbundle python-charade (a fork of python-chardet).
 # https://bugzilla.redhat.com/show_bug.cgi?id=904623
-Patch1:         python-requests-system-chardet-not-charade.patch
+#Patch1:         python-requests-system-chardet-not-charade.patch
 # Unbundle python-charade (a fork of python-urllib3).
 # https://bugzilla.redhat.com/show_bug.cgi?id=904623
-Patch2:         python-requests-system-urllib3.patch
+#Patch2:         python-requests-system-urllib3.patch
 
 BuildArch:      noarch
 
